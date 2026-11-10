@@ -3,11 +3,11 @@ import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import { Send, Bot, User, Sparkles, BookOpen, Sun, Moon } from 'lucide-react';
 
-const START_WEBHOOK =
-  'http://localhost:5678/webhook/ab577d0a-7ea9-4721-b570-6fb3ef9499a6';
+// استبدال localhost برابط Ngrok الثابت
+const NGROK_BASE_URL = 'https://makeover-repurpose-demeanor.ngrok-free.dev';
 
-const STATUS_WEBHOOK =
-  'http://localhost:5678/webhook/a81f0ae7-8f69-4881-8de8-8030095998c6';
+const START_WEBHOOK = `${NGROK_BASE_URL}/webhook/ab577d0a-7ea9-4721-b570-6fb3ef9499a6`;
+const STATUS_WEBHOOK = `${NGROK_BASE_URL}/webhook/a81f0ae7-8f69-4881-8de8-8030095998c6`;
 
 const POLL_INTERVAL = 3000;
 const MAX_WAIT_TIME = 10 * 60 * 1000;
@@ -84,6 +84,9 @@ export default function App() {
 
         const response = await fetch(url.toString(), {
           method: 'GET',
+          headers: {
+            'ngrok-skip-browser-warning': 'true' // مهم جداً لتخطي صفحة تحذير ngrok
+          },
           cache: 'no-store'
         });
 
@@ -138,7 +141,8 @@ export default function App() {
       const startResponse = await fetch(START_WEBHOOK, {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
+          'ngrok-skip-browser-warning': 'true' // مهم جداً هنا أيضاً لتخطي صفحة ngrok
         },
         body: JSON.stringify({
           chatInput: userMessage,
